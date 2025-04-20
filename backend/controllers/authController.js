@@ -44,3 +44,16 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: "Login failed" });
   }
 };
+exports.userDetails = async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({ where: { id } });
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.status(200).json({ email: user.email, username: user.username });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch user data" })
+  }
+}
